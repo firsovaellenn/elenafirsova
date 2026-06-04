@@ -27,8 +27,8 @@ export interface AboutData {
 
 export const aboutData: AboutData = {
   photo: "https://picsum.photos/seed/elena-profile/600/750",
-  photoAlt: "Елена Ф. — профессиональная модель",
-  name: "Елена Ф.",
+  photoAlt: "Елена Фирсова — профессиональная модель",
+  name: "Елена Фирсова",
   title: "Professional Model",
   bio: "Профессиональная модель с опытом работы более 5 лет. Сотрудничала с ведущими российскими и международными брендами, участвовала в показах Moscow Fashion Week и рекламных кампаниях. Специализируюсь на fashion, beauty и commercial съёмках. Люблю своё дело и подхожу к каждому проекту с полной отдачей.",
   parameters: [
