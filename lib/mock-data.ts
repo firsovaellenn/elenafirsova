@@ -1,7 +1,8 @@
 // Мок-данные для статического режима (без БД)
 // Используются когда USE_DATABASE=false или БД недоступна
 
-import { Service } from "./models";
+import { Service, Photo } from "./models";
+import { portfolioItems } from "./data";
 
 export const mockServices: Service[] = [
   {
@@ -32,3 +33,8 @@ export const mockServices: Service[] = [
     updatedAt: new Date("2024-03-10").toISOString(),
   },
 ];
+
+export const mockPhotos: Photo[] = portfolioItems.map((item) => ({
+  ...item,
+  createdAt: new Date("2024-01-01").toISOString(),
+}));

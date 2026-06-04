@@ -19,6 +19,17 @@ export interface Service {
   updatedAt: string;
 }
 
+export interface Photo {
+  id: string;
+  src: string;
+  alt: string;
+  category: "fashion" | "beauty" | "commercial";
+  title: string;
+  width: number;
+  height: number;
+  createdAt: string;
+}
+
 export async function getServiceById(id: string): Promise<Service | null> {
   const result = await docClient.send(
     new GetCommand({
@@ -129,6 +140,42 @@ export async function deleteService(id: string): Promise<void> {
   await docClient.send(
     new DeleteCommand({
       TableName: TableName.SERVICES,
+      Key: { id },
+    })
+  );
+}
+
+export async function createPhoto(
+  data: Omit<Photo, "createdAt">
+): Promise<Photo> {
+  const photo: Photo = {
+    ...data,
+    createdAt: new Date().toISOString(),
+  };
+
+  await docClient.send(
+    new PutCommand({
+      TableName: TableName.PHOTOS,
+      Item: photo,
+    })
+  );
+
+  return photo;
+}
+
+export async function getAllPhotos(): Promise<Photo[]> {
+  const result = await docClient.send(
+    new ScanCommand({
+      TableName: TableName.PHOTOS,
+    })
+  );
+  return (result.Items as Photo[]) ?? [];
+}
+
+export async function deletePhoto(id: string): Promise<void> {
+  await docClient.send(
+    new DeleteCommand({
+      TableName: TableName.PHOTOS,
       Key: { id },
     })
   );

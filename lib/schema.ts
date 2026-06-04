@@ -6,6 +6,7 @@ import {
 
 export const TableName = {
   SERVICES: "services",
+  PHOTOS: "photos",
 } as const;
 
 export type TableName = (typeof TableName)[keyof typeof TableName];
@@ -33,12 +34,28 @@ export const TABLE_SCHEMAS: Record<TableName, TableSchema> = {
       },
     ],
   },
+  [TableName.PHOTOS]: {
+    name: TableName.PHOTOS,
+    keySchema: [{ AttributeName: "id", KeyType: "HASH" }],
+    attributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" },
+      { AttributeName: "category", AttributeType: "S" },
+    ],
+    globalSecondaryIndexes: [
+      {
+        IndexName: "category-index",
+        KeySchema: [{ AttributeName: "category", KeyType: "HASH" }],
+        Projection: { ProjectionType: "ALL" },
+      },
+    ],
+  },
 };
 
 export const TABLE_NAMES: TableName[] = Object.values(TableName);
 
 export const IndexName = {
   SERVICES_STATUS: "status-index",
+  PHOTOS_CATEGORY: "category-index",
 } as const;
 
 export type IndexName = (typeof IndexName)[keyof typeof IndexName];
