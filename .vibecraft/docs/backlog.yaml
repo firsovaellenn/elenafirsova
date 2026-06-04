@@ -89,8 +89,13 @@ tasks:
     depends_on:
       - task-001
     related_feature: Услуги и прайс
-    status: pending
-    summary: null
+    status: completed
+    summary: >-
+      Реализована секция «Услуги и прайс» с четырьмя карточками услуг
+      (фотосъёмки, показы, реклама, съёмки для брендов). Каждая карточка
+      содержит иконку, описание, список форматов работы и стоимость.
+      Основная реализация: components/services-section.tsx — компонент
+      секции, lib/data.ts — тип ServiceItem и статические данные.
   - id: task-005
     phase: mvp
     title: Секция «Отзывы и клиенты»

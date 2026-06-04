@@ -167,3 +167,66 @@ export const portfolioItems: PortfolioItem[] = [
     height: 800,
   },
 ];
+
+export interface ServiceItem {
+  id: string;
+  title: string;
+  description: string;
+  formats: string[];
+  priceFrom: string;
+}
+
+export const servicesData: ServiceItem[] = [
+  {
+    id: "photoshoot",
+    title: "Фотосъёмки",
+    description:
+      "Профессиональные фотосъёмки любого формата — от fashion editorial до beauty и lookbook. Индивидуальный подход к каждому проекту.",
+    formats: [
+      "Fashion editorial",
+      "Beauty & портреты",
+      "Lookbook",
+      "Студийная и выездная съёмка",
+    ],
+    priceFrom: "от 15 000 ₽/час",
+  },
+  {
+    id: "fashion-shows",
+    title: "Показы",
+    description:
+      "Участие в показах и презентациях коллекций. Опыт работы на подиуме, дефиле, презентации для брендов и дизайнеров.",
+    formats: [
+      "Fashion show дефиле",
+      "Презентация коллекции",
+      "Репетиции и кастинги",
+      "Мероприятия любой сложности",
+    ],
+    priceFrom: "от 30 000 ₽/выход",
+  },
+  {
+    id: "advertising",
+    title: "Реклама",
+    description:
+      "Съёмки для рекламных кампаний: телевизионная реклама, печатная продукция, digital-кампании и промо-материалы.",
+    formats: [
+      "ТВ-реклама",
+      "Печатная реклама",
+      "Digital-кампании",
+      "Промо-видео",
+    ],
+    priceFrom: "от 25 000 ₽/смена",
+  },
+  {
+    id: "brand-shoots",
+    title: "Съёмки для брендов",
+    description:
+      "Комплексное сотрудничество с брендами: каталоги, промо-кампании, амбассадорство и долгосрочные контракты.",
+    formats: [
+      "Каталог продукции",
+      "Бренд-кампании",
+      "Амбассадорство",
+      "Long-term контракты",
+    ],
+    priceFrom: "от 40 000 ₽/смена",
+  },
+];
