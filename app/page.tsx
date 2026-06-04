@@ -1,4 +1,5 @@
 import { PortfolioGallery } from "@/components/portfolio-gallery";
+import { AboutSection } from "@/components/about-section";
 
 export default function HomePage() {
   return (
@@ -24,6 +25,7 @@ export default function HomePage() {
           </p>
         </div>
       </div>
+      <AboutSection />
       <PortfolioGallery />
     </>
   );

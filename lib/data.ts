@@ -8,6 +8,66 @@ export interface PortfolioItem {
   height: number;
 }
 
+export interface AboutData {
+  photo: string;
+  photoAlt: string;
+  name: string;
+  title: string;
+  bio: string;
+  parameters: {
+    label: string;
+    value: string;
+  }[];
+  experience: {
+    period: string;
+    description: string;
+  }[];
+  achievements: string[];
+}
+
+export const aboutData: AboutData = {
+  photo: "https://picsum.photos/seed/elena-profile/600/750",
+  photoAlt: "Елена Ф. — профессиональная модель",
+  name: "Елена Ф.",
+  title: "Professional Model",
+  bio: "Профессиональная модель с опытом работы более 5 лет. Сотрудничала с ведущими российскими и международными брендами, участвовала в показах Moscow Fashion Week и рекламных кампаниях. Специализируюсь на fashion, beauty и commercial съёмках. Люблю своё дело и подхожу к каждому проекту с полной отдачей.",
+  parameters: [
+    { label: "Рост", value: "178 см" },
+    { label: "Размер одежды", value: "S (EU 36)" },
+    { label: "Размер обуви", value: "39 (EU)" },
+    { label: "Цвет глаз", value: "Зелёные" },
+    { label: "Цвет волос", value: "Русые" },
+    { label: "Объём груди / талия / бёдра", value: "86–62–90" },
+  ],
+  experience: [
+    {
+      period: "2024 — н.в.",
+      description:
+        "Сотрудничество с международными брендами, съёмки для каталогов и lookbook",
+    },
+    {
+      period: "2023 — 2024",
+      description:
+        "Участие в показах Moscow Fashion Week, съёмки для глянцевых изданий",
+    },
+    {
+      period: "2021 — 2023",
+      description: "Работа с fashion-брендами, коммерческая и beauty-съёмка",
+    },
+    {
+      period: "2019 — 2021",
+      description:
+        "Начало карьеры: тестовые съёмки, collaboration с фотографами",
+    },
+  ],
+  achievements: [
+    "Участница Moscow Fashion Week (2023, 2024)",
+    "Лицо рекламной кампании бренда премиум-сегмента (2024)",
+    "Съёмка для обложки глянцевого журнала (2023)",
+    "Более 50 успешных коммерческих проектов",
+  ],
+};
+
 export const categories = [
   { id: "all", label: "Все" },
   { id: "fashion", label: "Fashion" },
