@@ -1,6 +1,7 @@
 import { PortfolioGallery } from "@/components/portfolio-gallery";
 import { AboutSection } from "@/components/about-section";
 import { ServicesSection } from "@/components/services-section";
+import { TestimonialsSection } from "@/components/testimonials-section";
 
 export default function HomePage() {
   return (
@@ -29,6 +30,7 @@ export default function HomePage() {
       <AboutSection />
       <ServicesSection />
       <PortfolioGallery />
+      <TestimonialsSection />
     </>
   );
 }

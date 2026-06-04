@@ -109,8 +109,14 @@ tasks:
     depends_on:
       - task-001
     related_feature: Отзывы и клиенты
-    status: pending
-    summary: null
+    status: completed
+    summary: >-
+      Реализована секция «Отзывы и клиенты» с каруселью отзывов от фотографов,
+      брендов и агентств. Каждый отзыв содержит текст, имя и роль автора.
+      Карусель включает автопереключение, паузу при наведении, кнопки
+      навигации и индикаторы. Основная реализация:
+      components/testimonials-section.tsx — компонент карусели, lib/data.ts —
+      тип TestimonialItem и 5 статических отзывов.
   - id: task-006
     phase: mvp
     title: Секция «Контакты и связь»
