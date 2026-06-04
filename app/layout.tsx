@@ -9,11 +9,12 @@ import { Toaster } from "@/components/ui/sonner";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
-const appName = "Мой сервис";
+const appName = "Елена Ф.";
 
 export const metadata: Metadata = {
-  title: appName,
-  description: appName,
+  title: `${appName} — Professional Model`,
+  description:
+    "Портфолио профессиональной модели. Fashion, beauty, commercial съёмки.",
 };
 
 export default function RootLayout({
