@@ -45,8 +45,13 @@ tasks:
     depends_on:
       - task-001
     related_feature: Портфолио / Галерея
-    status: pending
-    summary: null
+    status: completed
+    summary: >-
+      Реализована секция портфолио с адаптивной сеткой фотографий и фильтрацией
+      по категориям (fashion, beauty, commercial). При клике на фото открывается
+      лайтбокс с навигацией (стрелки/клавиатура) и плавными анимациями.
+      Основная реализация: components/portfolio-gallery.tsx — компонент галереи
+      и лайтбокса, lib/data.ts — данные портфолио.
   - id: task-003
     phase: mvp
     title: Секция «О себе»
