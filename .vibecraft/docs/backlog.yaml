@@ -132,5 +132,12 @@ tasks:
     depends_on:
       - task-001
     related_feature: Контакты и связь
-    status: pending
-    summary: null
+    status: completed
+    summary: >-
+      Реализована секция «Контакты и связь» с формой обратной связи (имя,
+      email, сообщение), валидацией полей через zod, и уведомлением об успехе
+      через sonner. Добавлены ссылки на социальные сети (Instagram, Telegram,
+      VK), открывающиеся в новой вкладке, email для деловых предложений и
+      контактная информация. Основная реализация:
+      components/contacts-section.tsx — компонент секции, lib/data.ts — типы
+      ContactSocialLink, ContactsData и статические данные.

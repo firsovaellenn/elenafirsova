@@ -276,3 +276,25 @@ export const testimonialsData: TestimonialItem[] = [
     role: "Продюсер, Petrov Production",
   },
 ];
+
+export interface ContactSocialLink {
+  label: string;
+  href: string;
+  icon: string;
+}
+
+export interface ContactsData {
+  email: string;
+  businessEmail: string;
+  socialLinks: ContactSocialLink[];
+}
+
+export const contactsData: ContactsData = {
+  email: "elena.f@example.com",
+  businessEmail: "elena.f@example.com",
+  socialLinks: [
+    { label: "Instagram", href: "https://instagram.com/", icon: "instagram" },
+    { label: "Telegram", href: "https://t.me/", icon: "telegram" },
+    { label: "VK", href: "https://vk.com/", icon: "vk" },
+  ],
+};
