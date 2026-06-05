@@ -423,7 +423,9 @@ export function PortfolioGallery() {
 
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-1.5">Файл</label>
+                <label className="block text-sm font-medium mb-1.5">
+                  Фото <span className="text-destructive">*</span>
+                </label>
                 <label className="flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-xl p-6 cursor-pointer hover:border-primary/50 transition-colors">
                   {previewUrl ? (
                     <img
@@ -447,6 +449,9 @@ export function PortfolioGallery() {
                     disabled={uploading}
                   />
                 </label>
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  JPEG, PNG или WebP. Максимум 5 МБ.
+                </p>
               </div>
 
               <div>
@@ -454,7 +459,7 @@ export function PortfolioGallery() {
                   htmlFor="upload-title"
                   className="block text-sm font-medium mb-1.5"
                 >
-                  Название
+                  Название <span className="text-destructive">*</span>
                 </label>
                 <input
                   id="upload-title"
@@ -465,6 +470,9 @@ export function PortfolioGallery() {
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={uploading}
                 />
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Дайте фото короткое описательное название.
+                </p>
               </div>
 
               <div>
@@ -472,7 +480,7 @@ export function PortfolioGallery() {
                   htmlFor="upload-category"
                   className="block text-sm font-medium mb-1.5"
                 >
-                  Категория
+                  Категория <span className="text-destructive">*</span>
                 </label>
                 <select
                   id="upload-category"
@@ -487,6 +495,9 @@ export function PortfolioGallery() {
                   <option value="beauty">Beauty</option>
                   <option value="commercial">Commercial</option>
                 </select>
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Выберите категорию для фото — fashion, beauty или commercial.
+                </p>
               </div>
 
               <div className="flex gap-3 pt-2">
@@ -501,7 +512,7 @@ export function PortfolioGallery() {
                 <Button
                   className="flex-1 gap-2"
                   onClick={handleUpload}
-                  disabled={uploading || !selectedFile}
+                  disabled={uploading}
                 >
                   {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
                   {uploading ? "Загрузка..." : "Загрузить"}
