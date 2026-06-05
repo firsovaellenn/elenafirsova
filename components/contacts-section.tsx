@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { contactsData } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { loadSiteText } from "@/lib/site-text";
+import type { SiteText } from "@/lib/site-text";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Введите имя").max(100),
@@ -35,6 +37,10 @@ export function ContactsSection() {
   const [errors, setErrors] = useState<
     Partial<Record<keyof ContactFormData, string>>
   >({});
+  const [contactText] = useState<SiteText["contacts"]>(() => {
+    if (typeof window === "undefined") return contactsData;
+    return loadSiteText().contacts;
+  });
 
   const handleChange = (field: keyof ContactFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -67,7 +73,7 @@ export function ContactsSection() {
     const body = encodeURIComponent(
       `Имя: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
     );
-    window.location.href = `mailto:${contactsData.businessEmail}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${contactText.businessEmail}?subject=${subject}&body=${body}`;
 
     setForm({ name: "", email: "", message: "" });
     toast.success("Сообщение отправлено! Я свяжусь с вами в ближайшее время.");
@@ -193,10 +199,10 @@ export function ContactsSection() {
                         Email
                       </p>
                       <a
-                        href={`mailto:${contactsData.businessEmail}`}
+                        href={`mailto:${contactText.businessEmail}`}
                         className="text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        {contactsData.businessEmail}
+                        {contactText.businessEmail}
                       </a>
                     </div>
                   </div>
@@ -222,7 +228,7 @@ export function ContactsSection() {
                         Телефон
                       </p>
                       <p className="text-muted-foreground">
-                        {contactsData.phone}
+                        {contactText.phone}
                       </p>
                     </div>
                   </div>
@@ -234,7 +240,7 @@ export function ContactsSection() {
                   Социальные сети
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  {contactsData.socialLinks.map((link) => (
+                  {contactText.socialLinks.map((link) => (
                     <a
                       key={link.label}
                       href={link.href}

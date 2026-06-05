@@ -5,6 +5,7 @@ import { Award, Briefcase, Ruler, Quote, Camera } from "lucide-react";
 import { aboutData } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { PinDialog } from "@/components/pin-dialog";
+import { loadSiteText } from "@/lib/site-text";
 
 function ParamBadge({ label, value }: { label: string; value: string }) {
   return (
@@ -28,9 +29,17 @@ export function AboutSection() {
       return aboutData.photo;
     }
   });
+  const [siteText] = useState<ReturnType<typeof loadSiteText> | null>(() => {
+    if (typeof window === "undefined") return null;
+    return loadSiteText();
+  });
   const [pinVerified, setPinVerified] = useState(false);
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const bio = siteText?.bio ?? aboutData.bio;
+  const experience = siteText?.experience ?? aboutData.experience;
+  const achievements = siteText?.achievements ?? aboutData.achievements;
 
   function handlePhotoClick() {
     if (!pinVerified) {
@@ -118,7 +127,7 @@ export function AboutSection() {
                 </p>
                 <div className="h-1 w-12 bg-gradient-gold rounded-full" />
                 <p className="text-muted-foreground leading-relaxed text-lg">
-                  {aboutData.bio}
+                  {bio}
                 </p>
               </div>
             </ScrollReveal>
@@ -156,7 +165,7 @@ export function AboutSection() {
                   </h4>
                 </div>
                 <div className="space-y-2">
-                  {aboutData.experience.map((exp) => (
+                  {experience.map((exp) => (
                     <div
                       key={exp.period}
                       className="relative pl-10 pb-6 last:pb-0"
@@ -184,7 +193,7 @@ export function AboutSection() {
                   </h4>
                 </div>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {aboutData.achievements.map((item) => (
+                  {achievements.map((item) => (
                     <li
                       key={item}
                       className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border/40 shadow-sm"

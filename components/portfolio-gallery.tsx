@@ -11,12 +11,17 @@ import {
   Loader2,
   GripVertical,
   Lock,
+  Edit,
+  PenLine,
+  Save,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { PinDialog } from "@/components/pin-dialog";
+import { TextEditorDialog } from "@/components/text-editor-dialog";
+import { useManagement } from "@/components/management-context";
 import {
   DndContext,
   closestCenter,
@@ -95,11 +100,13 @@ function SortablePhoto({
   photo,
   onSelect,
   onDelete,
+  onEditTitle,
   pinVerified,
 }: {
   photo: GalleryPhoto;
   onSelect: () => void;
   onDelete: () => void;
+  onEditTitle: () => void;
   pinVerified: boolean;
 }) {
   const {
@@ -147,27 +154,36 @@ function SortablePhoto({
       </button>
 
       {pinVerified && (
-        <button
-          {...attributes}
-          {...listeners}
-          className="absolute top-3 left-3 z-10 p-2 rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all duration-200 cursor-grab active:cursor-grabbing"
-          aria-label="Перетащить"
-        >
-          <GripVertical className="h-4 w-4" />
-        </button>
-      )}
-
-      {pinVerified && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-          className="absolute top-3 right-3 z-10 p-2.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-red-500/70 transition-all duration-200 backdrop-blur-sm"
-          aria-label="Удалить фото"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <>
+          <button
+            {...attributes}
+            {...listeners}
+            className="absolute top-3 left-3 z-10 p-2 rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all duration-200 cursor-grab active:cursor-grabbing"
+            aria-label="Перетащить"
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditTitle();
+            }}
+            className="absolute top-3 right-12 z-10 p-2.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-blue-500/70 transition-all duration-200 backdrop-blur-sm"
+            aria-label="Редактировать название"
+          >
+            <PenLine className="h-4 w-4" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="absolute top-3 right-3 z-10 p-2.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-red-500/70 transition-all duration-200 backdrop-blur-sm"
+            aria-label="Удалить фото"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </>
       )}
     </div>
   );
@@ -180,9 +196,12 @@ export function PortfolioGallery() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [photoTitle, setPhotoTitle] = useState("");
-  const [pinVerified, setPinVerified] = useState(false);
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [textEditorOpen, setTextEditorOpen] = useState(false);
+  const [editingPhotoId, setEditingPhotoId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isManagement, onPinSuccess } = useManagement();
 
   useEffect(() => {
     const stored = loadPhotos();
@@ -221,6 +240,11 @@ export function PortfolioGallery() {
       savePhotos(reordered);
       return reordered;
     });
+  }
+
+  function handlePinSuccess() {
+    onPinSuccess();
+    setPinDialogOpen(false);
   }
 
   async function handleFiles(files: FileList, title: string) {
@@ -293,6 +317,25 @@ export function PortfolioGallery() {
     toast.success("Фото удалено");
   }
 
+  function handleEditTitleStart(photo: GalleryPhoto) {
+    setEditingPhotoId(photo.id);
+    setEditingTitle(photo.title || "");
+  }
+
+  function handleEditTitleSave() {
+    if (!editingPhotoId) return;
+    setPhotos((prev) => {
+      const updated = prev.map((p) =>
+        p.id === editingPhotoId ? { ...p, title: editingTitle || undefined } : p
+      );
+      savePhotos(updated);
+      return updated;
+    });
+    setEditingPhotoId(null);
+    setEditingTitle("");
+    toast.success("Название сохранено");
+  }
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!selectedPhoto) return;
@@ -329,6 +372,10 @@ export function PortfolioGallery() {
     };
   }, [selectedPhoto, handleKeyDown]);
 
+  function handleTextEditorSave() {
+    window.location.reload();
+  }
+
   return (
     <section id="portfolio" className="py-28 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.02] to-background" />
@@ -346,16 +393,26 @@ export function PortfolioGallery() {
         </ScrollReveal>
 
         <ScrollReveal delay={150}>
-          <div className="flex justify-center mb-12">
-            {pinVerified ? (
-              <Button
-                onClick={() => setUploadOpen(true)}
-                className="gap-2 rounded-full px-6 font-semibold"
-                variant="outline"
-              >
-                <Upload className="h-4 w-4" />
-                Загрузить фото
-              </Button>
+          <div className="flex justify-center gap-3 mb-12">
+            {isManagement ? (
+              <>
+                <Button
+                  onClick={() => setTextEditorOpen(true)}
+                  className="gap-2 rounded-full px-6 font-semibold"
+                  variant="outline"
+                >
+                  <Edit className="h-4 w-4" />
+                  Редактировать текст
+                </Button>
+                <Button
+                  onClick={() => setUploadOpen(true)}
+                  className="gap-2 rounded-full px-6 font-semibold"
+                  variant="outline"
+                >
+                  <Upload className="h-4 w-4" />
+                  Загрузить фото
+                </Button>
+              </>
             ) : (
               <button
                 onClick={() => setPinDialogOpen(true)}
@@ -388,9 +445,10 @@ export function PortfolioGallery() {
                   <ScrollReveal key={photo.id} delay={0}>
                     <SortablePhoto
                       photo={photo}
-                      pinVerified={pinVerified}
+                      pinVerified={isManagement}
                       onSelect={() => setSelectedPhoto(photo)}
                       onDelete={() => handleDelete(photo)}
+                      onEditTitle={() => handleEditTitleStart(photo)}
                     />
                   </ScrollReveal>
                 ))}
@@ -405,7 +463,7 @@ export function PortfolioGallery() {
             <p className="text-muted-foreground text-lg mb-4">
               Нет загруженных фото
             </p>
-            {pinVerified ? (
+            {isManagement ? (
               <Button
                 onClick={() => setUploadOpen(true)}
                 variant="outline"
@@ -578,10 +636,70 @@ export function PortfolioGallery() {
         </div>
       )}
 
+      {editingPhotoId && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setEditingPhotoId(null)}
+        >
+          <div
+            className="bg-background rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-black tracking-tight">
+                Название фото
+              </h3>
+              <button
+                onClick={() => setEditingPhotoId(null)}
+                className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <input
+                value={editingTitle}
+                onChange={(e) => setEditingTitle(e.target.value)}
+                placeholder="Введите название фото"
+                className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleEditTitleSave();
+                }}
+                autoFocus
+              />
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 rounded-xl"
+                  onClick={() => setEditingPhotoId(null)}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  className="flex-1 rounded-xl gap-2"
+                  onClick={handleEditTitleSave}
+                >
+                  <Save className="h-4 w-4" />
+                  Сохранить
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <TextEditorDialog
+        open={textEditorOpen}
+        onOpenChange={setTextEditorOpen}
+        onSave={handleTextEditorSave}
+      />
+
       <PinDialog
         open={pinDialogOpen}
         onOpenChange={setPinDialogOpen}
-        onSuccess={() => setPinVerified(true)}
+        onSuccess={handlePinSuccess}
       />
     </section>
   );

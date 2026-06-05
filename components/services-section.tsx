@@ -1,7 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { Camera, Presentation, Triangle, Building2 } from "lucide-react";
-import { servicesData } from "@/lib/data";
-import type { ServiceItem } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { loadSiteText } from "@/lib/site-text";
+import type { SiteText } from "@/lib/site-text";
 
 const iconMap: Record<string, React.ReactNode> = {
   photoshoot: <Camera className="h-6 w-6" />,
@@ -14,7 +17,7 @@ function ServiceCard({
   service,
   index,
 }: {
-  service: ServiceItem;
+  service: SiteText["services"][number];
   index: number;
 }) {
   return (
@@ -60,6 +63,13 @@ function ServiceCard({
 }
 
 export function ServicesSection() {
+  const [services] = useState<SiteText["services"]>(() => {
+    if (typeof window === "undefined") return [];
+    return loadSiteText().services;
+  });
+
+  if (services.length === 0) return null;
+
   return (
     <section id="services" className="py-28 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.02] to-background" />
@@ -81,7 +91,7 @@ export function ServicesSection() {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {servicesData.map((service, index) => (
+          {services.map((service, index) => (
             <ServiceCard key={service.id} service={service} index={index} />
           ))}
         </div>
