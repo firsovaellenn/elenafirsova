@@ -422,38 +422,38 @@ export function PortfolioGallery() {
           onClick={() => !uploading && setUploadOpen(false)}
         >
           <div
-            className="bg-background rounded-3xl shadow-2xl w-full max-w-md mx-4 p-8 animate-in zoom-in-95 duration-200"
+            className="bg-background rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-4 animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-black tracking-tight">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-black tracking-tight">
                 Загрузить фото
               </h3>
               <button
                 onClick={() => setUploadOpen(false)}
-                className="p-2 rounded-full hover:bg-muted transition-colors"
+                className="p-1.5 rounded-full hover:bg-muted transition-colors"
                 disabled={uploading}
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-2">
               <div>
-                <label className="block text-sm font-bold mb-2 uppercase tracking-wider">
+                <label className="block text-xs font-bold mb-1 uppercase tracking-wider">
                   Фото <span className="text-destructive">*</span>
                 </label>
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-2xl p-8 cursor-pointer hover:border-primary/50 transition-colors">
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-xl p-3 cursor-pointer hover:border-primary/50 transition-colors">
                   {previewUrl ? (
                     <img
                       src={previewUrl}
                       alt="Preview"
-                      className="max-h-40 rounded-lg object-contain mb-3"
+                      className="max-h-16 rounded-lg object-contain mb-2"
                     />
                   ) : (
-                    <Upload className="h-10 w-10 text-muted-foreground mb-3" />
+                    <Upload className="h-6 w-6 text-muted-foreground mb-2" />
                   )}
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {previewUrl
                       ? "Нажмите чтобы изменить"
                       : "Нажмите чтобы выбрать фото"}
@@ -466,7 +466,7 @@ export function PortfolioGallery() {
                     disabled={uploading}
                   />
                 </label>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1">
                   JPEG, PNG или WebP. Максимум 5 МБ.
                 </p>
               </div>
@@ -474,7 +474,7 @@ export function PortfolioGallery() {
               <div>
                 <label
                   htmlFor="upload-title"
-                  className="block text-sm font-bold mb-2 uppercase tracking-wider"
+                  className="block text-xs font-bold mb-1 uppercase tracking-wider"
                 >
                   Название <span className="text-destructive">*</span>
                 </label>
@@ -484,10 +484,10 @@ export function PortfolioGallery() {
                   value={uploadTitle}
                   onChange={(e) => setUploadTitle(e.target.value)}
                   placeholder="Например: Editorial Spring"
-                  className="flex h-12 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-9 w-full rounded-xl border border-input bg-background px-3 py-1 text-xs ring-offset-background file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={uploading}
                 />
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1">
                   Дайте фото короткое описательное название.
                 </p>
               </div>
@@ -495,7 +495,7 @@ export function PortfolioGallery() {
               <div>
                 <label
                   htmlFor="upload-category"
-                  className="block text-sm font-bold mb-2 uppercase tracking-wider"
+                  className="block text-xs font-bold mb-1 uppercase tracking-wider"
                 >
                   Категория <span className="text-destructive">*</span>
                 </label>
@@ -505,33 +505,33 @@ export function PortfolioGallery() {
                   onChange={(e) =>
                     setUploadCategory(e.target.value as UploadCategory)
                   }
-                  className="flex h-12 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-9 w-full rounded-xl border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={uploading}
                 >
                   <option value="fashion">Fashion</option>
                   <option value="beauty">Beauty</option>
                   <option value="commercial">Commercial</option>
                 </select>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1">
                   Выберите категорию для фото — fashion, beauty или commercial.
                 </p>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-2 pt-1">
                 <Button
                   variant="outline"
-                  className="flex-1 rounded-xl h-12"
+                  className="flex-1 rounded-xl h-9 text-xs"
                   onClick={() => setUploadOpen(false)}
                   disabled={uploading}
                 >
                   Отмена
                 </Button>
                 <Button
-                  className="flex-1 gap-2 rounded-xl h-12"
+                  className="flex-1 gap-1 rounded-xl h-9 text-xs"
                   onClick={handleUpload}
                   disabled={uploading}
                 >
-                  {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {uploading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {uploading ? "Загрузка..." : "Загрузить"}
                 </Button>
               </div>
