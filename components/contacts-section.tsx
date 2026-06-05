@@ -222,7 +222,7 @@ export function ContactsSection() {
                         Телефон
                       </p>
                       <p className="text-muted-foreground">
-                        +7 (999) 123-45-67
+                        {contactsData.phone}
                       </p>
                     </div>
                   </div>
