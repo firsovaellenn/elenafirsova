@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { PinDialog } from "@/components/pin-dialog";
 import { TextEditorDialog } from "@/components/text-editor-dialog";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useManagement } from "@/components/management-context";
 import {
   DndContext,
@@ -412,6 +413,7 @@ export function PortfolioGallery() {
                   <Upload className="h-4 w-4" />
                   Загрузить фото
                 </Button>
+                <ThemeSwitcher />
               </>
             ) : (
               <button
@@ -440,7 +442,7 @@ export function PortfolioGallery() {
               items={photos.map((p) => p.id)}
               strategy={rectSortingStrategy}
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 {photos.map((photo) => (
                   <ScrollReveal key={photo.id} delay={0}>
                     <SortablePhoto
