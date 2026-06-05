@@ -1,123 +1,141 @@
-import { Award, Briefcase, Ruler } from "lucide-react";
+import { Award, Briefcase, Ruler, Quote } from "lucide-react";
 import { aboutData } from "@/lib/data";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 function ParamBadge({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2 border-b border-border/40 last:border-0">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-right">{value}</span>
-    </div>
-  );
-}
-
-function ExperienceCard({
-  period,
-  description,
-}: {
-  period: string;
-  description: string;
-}) {
-  return (
-    <div className="relative pl-8 pb-8 last:pb-0">
-      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full border-2 border-primary bg-background" />
-      <div className="absolute left-[5px] top-5 bottom-0 w-px bg-border last:hidden" />
-      <p className="text-xs text-muted-foreground mb-1">{period}</p>
-      <p className="text-sm">{description}</p>
+    <div className="flex items-baseline justify-between gap-4 py-3 border-b border-border/30 last:border-0">
+      <span className="text-sm uppercase tracking-wider text-muted-foreground font-medium">
+        {label}
+      </span>
+      <span className="text-sm font-bold">{value}</span>
     </div>
   );
 }
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-24 px-4">
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center space-y-4 mb-16">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            About
-          </p>
-          <h2 className="text-4xl font-light tracking-tight sm:text-5xl">
-            О себе
-          </h2>
-          <div className="mx-auto h-px w-16 bg-muted-foreground/30" />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-          <div className="lg:col-span-2">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
-              <img
-                src={aboutData.photo}
-                alt={aboutData.photoAlt}
-                className="h-full w-full object-cover"
-              />
-            </div>
+    <section id="about" className="py-28 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 pattern-dots opacity-[0.03]" />
+      <div className="container mx-auto max-w-7xl relative z-10">
+        <ScrollReveal>
+          <div className="text-center space-y-4 mb-20">
+            <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
+              About
+            </p>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+              О себе
+            </h2>
+            <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
+        </ScrollReveal>
 
-          <div className="lg:col-span-3 space-y-10">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-light tracking-tight">
-                {aboutData.name}
-              </h3>
-              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-                {aboutData.title}
-              </p>
-              <div className="h-px w-12 bg-muted-foreground/30" />
-              <p className="text-muted-foreground leading-relaxed">
-                {aboutData.bio}
-              </p>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20 items-start">
+          <ScrollReveal className="lg:col-span-2" delay={100}>
+            <div className="relative">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-2xl">
+                <img
+                  src={aboutData.photo}
+                  alt={aboutData.photoAlt}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary rounded-2xl -z-10" />
+              <div className="absolute -top-4 -left-4 w-16 h-16 border-2 border-primary rounded-2xl -z-10" />
             </div>
+          </ScrollReveal>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Ruler className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium uppercase tracking-[0.15em]">
-                  Параметры
-                </h4>
+          <div className="lg:col-span-3 space-y-12">
+            <ScrollReveal delay={200}>
+              <div className="space-y-4">
+                <h3 className="text-4xl sm:text-5xl font-black tracking-tighter leading-[0.9]">
+                  {aboutData.name}
+                </h3>
+                <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold">
+                  {aboutData.title}
+                </p>
+                <div className="h-1 w-12 bg-gradient-gold rounded-full" />
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  {aboutData.bio}
+                </p>
               </div>
-              <div className="bg-muted/50 rounded-xl p-5">
-                {aboutData.parameters.map((param) => (
-                  <ParamBadge
-                    key={param.label}
-                    label={param.label}
-                    value={param.value}
-                  />
-                ))}
-              </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium uppercase tracking-[0.15em]">
-                  Опыт работы
-                </h4>
+            <ScrollReveal delay={300}>
+              <div className="space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Ruler className="h-4 w-4 text-primary" />
+                  </div>
+                  <h4 className="text-sm font-bold uppercase tracking-[0.2em]">
+                    Параметры
+                  </h4>
+                </div>
+                <div className="bg-card border border-border/40 rounded-2xl p-6 shadow-sm">
+                  {aboutData.parameters.map((param) => (
+                    <ParamBadge
+                      key={param.label}
+                      label={param.label}
+                      value={param.value}
+                    />
+                  ))}
+                </div>
               </div>
-              <div>
-                {aboutData.experience.map((exp) => (
-                  <ExperienceCard
-                    key={exp.period}
-                    period={exp.period}
-                    description={exp.description}
-                  />
-                ))}
-              </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Award className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium uppercase tracking-[0.15em]">
-                  Ключевые достижения
-                </h4>
+            <ScrollReveal delay={400}>
+              <div className="space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Briefcase className="h-4 w-4 text-primary" />
+                  </div>
+                  <h4 className="text-sm font-bold uppercase tracking-[0.2em]">
+                    Опыт работы
+                  </h4>
+                </div>
+                <div className="space-y-2">
+                  {aboutData.experience.map((exp) => (
+                    <div
+                      key={exp.period}
+                      className="relative pl-10 pb-6 last:pb-0"
+                    >
+                      <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-primary bg-background" />
+                      <div className="absolute left-[7px] top-5 bottom-0 w-0.5 bg-primary/20 last:hidden" />
+                      <p className="text-xs uppercase tracking-wider text-primary font-semibold mb-1">
+                        {exp.period}
+                      </p>
+                      <p className="text-muted-foreground">{exp.description}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <ul className="space-y-2">
-                {aboutData.achievements.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                    <span className="text-muted-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={500}>
+              <div className="space-y-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Award className="h-4 w-4 text-primary" />
+                  </div>
+                  <h4 className="text-sm font-bold uppercase tracking-[0.2em]">
+                    Ключевые достижения
+                  </h4>
+                </div>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {aboutData.achievements.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border/40 shadow-sm"
+                    >
+                      <Quote className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>

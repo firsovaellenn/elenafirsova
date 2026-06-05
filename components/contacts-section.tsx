@@ -7,6 +7,7 @@ import { Camera, Send, Globe, Mail, MapPin, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { contactsData } from "@/lib/data";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Введите имя").max(100),
@@ -64,7 +65,6 @@ export function ContactsSection() {
     setErrors({});
     setIsSubmitting(true);
 
-    // Simulate sending
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setIsSubmitting(false);
@@ -73,160 +73,183 @@ export function ContactsSection() {
   };
 
   return (
-    <section id="contacts" className="py-24 px-4">
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center space-y-4 mb-16">
-          <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            Contacts
-          </p>
-          <h2 className="text-4xl font-light tracking-tight sm:text-5xl">
-            Контакты и связь
-          </h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Готова к новым проектам и сотрудничеству
-          </p>
-          <div className="mx-auto h-px w-16 bg-muted-foreground/30" />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 max-w-5xl mx-auto">
-          <div>
-            <h3 className="text-xl font-medium tracking-tight mb-6">
-              Напишите мне
-            </h3>
-
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-              <div>
-                <label
-                  htmlFor="contact-name"
-                  className="block text-sm font-medium mb-1.5"
-                >
-                  Имя
-                </label>
-                <Input
-                  id="contact-name"
-                  placeholder="Ваше имя"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                />
-                {errors.name && (
-                  <p className="text-xs text-destructive mt-1">{errors.name}</p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="contact-email"
-                  className="block text-sm font-medium mb-1.5"
-                >
-                  Email
-                </label>
-                <Input
-                  id="contact-email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={form.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                />
-                {errors.email && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="contact-message"
-                  className="block text-sm font-medium mb-1.5"
-                >
-                  Сообщение
-                </label>
-                <textarea
-                  id="contact-message"
-                  rows={5}
-                  placeholder="Ваше сообщение..."
-                  value={form.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                />
-                {errors.message && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.message}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Отправка..." : "Отправить сообщение"}
-              </Button>
-            </form>
+    <section id="contacts" className="py-28 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.02] to-primary/[0.04]" />
+      <div className="container mx-auto max-w-7xl relative z-10">
+        <ScrollReveal>
+          <div className="text-center space-y-4 mb-20">
+            <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
+              Contacts
+            </p>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+              Контакты и связь
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto text-lg">
+              Готова к новым проектам и сотрудничеству
+            </p>
+            <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
+        </ScrollReveal>
 
-          <div className="flex flex-col justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 max-w-5xl mx-auto">
+          <ScrollReveal delay={100}>
             <div>
-              <h3 className="text-xl font-medium tracking-tight mb-6">
-                Контактная информация
+              <h3 className="text-2xl font-black tracking-tight mb-8">
+                Напишите мне
               </h3>
 
-              <div className="space-y-5">
-                <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium">Email</p>
-                    <a
-                      href={`mailto:${contactsData.businessEmail}`}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {contactsData.businessEmail}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium">Локация</p>
-                    <p className="text-sm text-muted-foreground">
-                      Москва, Россия
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium">Телефон</p>
-                    <p className="text-sm text-muted-foreground">
-                      +7 (999) 123-45-67
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <p className="text-sm font-medium mb-4">Социальные сети</p>
-              <div className="flex flex-wrap gap-3">
-                {contactsData.socialLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-lg border bg-card px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <div>
+                  <label
+                    htmlFor="contact-name"
+                    className="block text-sm font-bold mb-2 uppercase tracking-wider"
                   >
-                    {socialIcons[link.icon] || <Globe className="h-5 w-5" />}
-                    {link.label}
-                  </a>
-                ))}
+                    Имя
+                  </label>
+                  <Input
+                    id="contact-name"
+                    placeholder="Ваше имя"
+                    value={form.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    className="h-12 rounded-xl"
+                  />
+                  {errors.name && (
+                    <p className="text-xs text-destructive mt-1.5">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="contact-email"
+                    className="block text-sm font-bold mb-2 uppercase tracking-wider"
+                  >
+                    Email
+                  </label>
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={form.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                    className="h-12 rounded-xl"
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-destructive mt-1.5">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="contact-message"
+                    className="block text-sm font-bold mb-2 uppercase tracking-wider"
+                  >
+                    Сообщение
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    rows={5}
+                    placeholder="Ваше сообщение..."
+                    value={form.message}
+                    onChange={(e) => handleChange("message", e.target.value)}
+                    className="flex w-full rounded-xl border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                  />
+                  {errors.message && (
+                    <p className="text-xs text-destructive mt-1.5">
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full rounded-xl h-13 font-bold uppercase tracking-wider"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Отправка..." : "Отправить сообщение"}
+                </Button>
+              </form>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
+            <div className="flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight mb-8">
+                  Контактная информация
+                </h3>
+
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-card border border-border/40">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold uppercase tracking-wider mb-1">
+                        Email
+                      </p>
+                      <a
+                        href={`mailto:${contactsData.businessEmail}`}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {contactsData.businessEmail}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-card border border-border/40">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <MapPin className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold uppercase tracking-wider mb-1">
+                        Локация
+                      </p>
+                      <p className="text-muted-foreground">Москва, Россия</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-card border border-border/40">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold uppercase tracking-wider mb-1">
+                        Телефон
+                      </p>
+                      <p className="text-muted-foreground">
+                        +7 (999) 123-45-67
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-12">
+                <p className="text-sm font-bold uppercase tracking-wider mb-5">
+                  Социальные сети
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {contactsData.socialLinks.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2.5 rounded-2xl border border-border/40 bg-card px-5 py-3 text-sm font-semibold text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:shadow-sm transition-all"
+                    >
+                      {socialIcons[link.icon] || <Globe className="h-5 w-5" />}
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

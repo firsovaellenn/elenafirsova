@@ -7,27 +7,51 @@ import { ContactsSection } from "@/components/contacts-section";
 export default function HomePage() {
   return (
     <>
-      <div className="min-h-[calc(100vh-9rem)] flex items-center justify-center px-4 py-16">
-        <div className="max-w-2xl w-full text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-              Professional Model
-            </p>
-            <h1 className="text-5xl font-light tracking-tight sm:text-7xl">
-              Елена
-              <span className="block font-semibold">Ф.</span>
-            </h1>
-            <div className="mx-auto h-px w-16 bg-muted-foreground/30" />
-            <p className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
-              Fashion · Beauty · Commercial
-            </p>
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 gradient-glossy-light" />
+        <div className="absolute inset-0 pattern-dots opacity-30" />
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-b from-primary/5 to-transparent" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="space-y-6">
+              <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
+                Professional Model
+              </p>
+              <h1 className="text-7xl sm:text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] text-balance">
+                Елена
+                <span className="block text-primary">Фирсова</span>
+              </h1>
+              <div className="h-1.5 w-24 bg-gradient-gold rounded-full" />
+              <p className="text-xl sm:text-2xl text-muted-foreground max-w-xl font-light tracking-wide">
+                Fashion · Beauty · Commercial
+              </p>
+              <p className="text-base text-muted-foreground/70 max-w-md leading-relaxed">
+                Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за
+                годы сотрудничества с фотографами, брендами и агентствами.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <a
+                  href="#portfolio"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full text-sm font-semibold uppercase tracking-wider hover:opacity-90 transition-all"
+                >
+                  Смотреть портфолио
+                </a>
+                <a
+                  href="#contacts"
+                  className="inline-flex items-center gap-2 border-2 border-foreground/20 text-foreground px-8 py-3 rounded-full text-sm font-semibold uppercase tracking-wider hover:border-foreground/40 transition-all"
+                >
+                  Связаться
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground/60 max-w-sm mx-auto">
-            Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за
-            годы сотрудничества с фотографами, брендами и агентствами.
-          </p>
         </div>
-      </div>
+        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
+          <div className="w-6 h-12 border-2 border-foreground/20 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-primary rounded-full mt-3 animate-bounce" />
+          </div>
+        </div>
+      </section>
       <AboutSection />
       <ServicesSection />
       <PortfolioGallery />
