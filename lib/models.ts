@@ -27,6 +27,7 @@ export interface Photo {
   height: number;
   order: number;
   createdAt: string;
+  title?: string;
 }
 
 export async function getServiceById(id: string): Promise<Service | null> {

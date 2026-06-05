@@ -12,6 +12,7 @@ const createPhotoSchema = z.object({
   width: z.number().positive().default(800),
   height: z.number().positive().default(1000),
   order: z.number().int().nonnegative().default(0),
+  title: z.string().optional(),
 });
 
 export async function GET() {

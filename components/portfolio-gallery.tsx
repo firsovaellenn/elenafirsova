@@ -39,9 +39,10 @@ interface GalleryPhoto {
   alt: string;
   width: number;
   height: number;
+  title?: string;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const VALID_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 function readFileAsBase64(file: File): Promise<string> {
@@ -135,6 +136,13 @@ function SortablePhoto({
             alt={photo.alt}
             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:opacity-90"
           />
+          {photo.title && (
+            <div className="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-white text-sm font-medium leading-tight">
+                {photo.title}
+              </p>
+            </div>
+          )}
         </div>
       </button>
 
@@ -171,6 +179,7 @@ export function PortfolioGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [photoTitle, setPhotoTitle] = useState("");
   const [pinVerified, setPinVerified] = useState(false);
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -214,7 +223,7 @@ export function PortfolioGallery() {
     });
   }
 
-  async function handleFiles(files: FileList) {
+  async function handleFiles(files: FileList, title: string) {
     const validFiles: File[] = [];
 
     for (const file of Array.from(files)) {
@@ -223,7 +232,7 @@ export function PortfolioGallery() {
         continue;
       }
       if (file.size > MAX_FILE_SIZE) {
-        toast.error(`${file.name}: файл слишком большой (максимум 5MB)`);
+        toast.error(`${file.name}: файл слишком большой (максимум 50MB)`);
         continue;
       }
       validFiles.push(file);
@@ -245,6 +254,7 @@ export function PortfolioGallery() {
             alt: file.name,
             width: dims.width,
             height: dims.height,
+            title: title || undefined,
           };
         })
       );
@@ -256,6 +266,7 @@ export function PortfolioGallery() {
       });
 
       setUploadOpen(false);
+      setPhotoTitle("");
       toast.success(`Загружено ${validFiles.length} фото`, {
         id: toastId,
       });
@@ -499,6 +510,23 @@ export function PortfolioGallery() {
             </div>
 
             <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="photo-title"
+                  className="text-sm font-medium text-muted-foreground"
+                >
+                  Название
+                </label>
+                <input
+                  id="photo-title"
+                  type="text"
+                  value={photoTitle}
+                  onChange={(e) => setPhotoTitle(e.target.value)}
+                  placeholder="Опционально — появится при наведении"
+                  className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={uploading}
+                />
+              </div>
               <label className="flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 cursor-pointer hover:border-primary/50 transition-colors">
                 {uploading ? (
                   <Loader2 className="h-10 w-10 animate-spin text-muted-foreground mb-3" />
@@ -514,7 +542,7 @@ export function PortfolioGallery() {
                       Можно выбрать несколько фото
                     </span>
                     <span className="text-xs text-muted-foreground mt-0.5">
-                      JPEG, PNG или WebP. Максимум 5 МБ.
+                      JPEG, PNG или WebP. Максимум 50 МБ.
                     </span>
                   </>
                 )}
@@ -526,7 +554,7 @@ export function PortfolioGallery() {
                   onChange={async (e) => {
                     const files = e.target.files;
                     if (files && files.length > 0) {
-                      await handleFiles(files);
+                      await handleFiles(files, photoTitle);
                     }
                     e.target.value = "";
                   }}
