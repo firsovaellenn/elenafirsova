@@ -10,11 +10,13 @@ import {
   Trash2,
   Loader2,
   GripVertical,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { PinDialog } from "@/components/pin-dialog";
 import {
   DndContext,
   closestCenter,
@@ -92,10 +94,12 @@ function SortablePhoto({
   photo,
   onSelect,
   onDelete,
+  pinVerified,
 }: {
   photo: GalleryPhoto;
   onSelect: () => void;
   onDelete: () => void;
+  pinVerified: boolean;
 }) {
   const {
     attributes,
@@ -134,25 +138,29 @@ function SortablePhoto({
         </div>
       </button>
 
-      <button
-        {...attributes}
-        {...listeners}
-        className="absolute top-3 left-3 z-10 p-2 rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all duration-200 cursor-grab active:cursor-grabbing"
-        aria-label="Перетащить"
-      >
-        <GripVertical className="h-4 w-4" />
-      </button>
+      {pinVerified && (
+        <button
+          {...attributes}
+          {...listeners}
+          className="absolute top-3 left-3 z-10 p-2 rounded-full bg-black/40 text-white opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all duration-200 cursor-grab active:cursor-grabbing"
+          aria-label="Перетащить"
+        >
+          <GripVertical className="h-4 w-4" />
+        </button>
+      )}
 
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
-        }}
-        className="absolute top-3 right-3 z-10 p-2.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-red-500/70 transition-all duration-200 backdrop-blur-sm"
-        aria-label="Удалить фото"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+      {pinVerified && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="absolute top-3 right-3 z-10 p-2.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-red-500/70 transition-all duration-200 backdrop-blur-sm"
+          aria-label="Удалить фото"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }
@@ -163,6 +171,8 @@ export function PortfolioGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [pinVerified, setPinVerified] = useState(false);
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -326,14 +336,25 @@ export function PortfolioGallery() {
 
         <ScrollReveal delay={150}>
           <div className="flex justify-center mb-12">
-            <Button
-              onClick={() => setUploadOpen(true)}
-              className="gap-2 rounded-full px-6 font-semibold"
-              variant="outline"
-            >
-              <Upload className="h-4 w-4" />
-              Загрузить фото
-            </Button>
+            {pinVerified ? (
+              <Button
+                onClick={() => setUploadOpen(true)}
+                className="gap-2 rounded-full px-6 font-semibold"
+                variant="outline"
+              >
+                <Upload className="h-4 w-4" />
+                Загрузить фото
+              </Button>
+            ) : (
+              <button
+                onClick={() => setPinDialogOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
+                aria-label="Панель управления"
+              >
+                <Lock className="h-3.5 w-3.5" />
+                Управление
+              </button>
+            )}
           </div>
         </ScrollReveal>
 
@@ -356,6 +377,7 @@ export function PortfolioGallery() {
                   <ScrollReveal key={photo.id} delay={0}>
                     <SortablePhoto
                       photo={photo}
+                      pinVerified={pinVerified}
                       onSelect={() => setSelectedPhoto(photo)}
                       onDelete={() => handleDelete(photo)}
                     />
@@ -372,14 +394,25 @@ export function PortfolioGallery() {
             <p className="text-muted-foreground text-lg mb-4">
               Нет загруженных фото
             </p>
-            <Button
-              onClick={() => setUploadOpen(true)}
-              variant="outline"
-              className="gap-2 rounded-full"
-            >
-              <Upload className="h-4 w-4" />
-              Загрузить первые фото
-            </Button>
+            {pinVerified ? (
+              <Button
+                onClick={() => setUploadOpen(true)}
+                variant="outline"
+                className="gap-2 rounded-full"
+              >
+                <Upload className="h-4 w-4" />
+                Загрузить первые фото
+              </Button>
+            ) : (
+              <button
+                onClick={() => setPinDialogOpen(true)}
+                className="inline-flex items-center gap-2 text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
+                aria-label="Панель управления"
+              >
+                <Lock className="h-3.5 w-3.5" />
+                Управление
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -516,6 +549,12 @@ export function PortfolioGallery() {
           </div>
         </div>
       )}
+
+      <PinDialog
+        open={pinDialogOpen}
+        onOpenChange={setPinDialogOpen}
+        onSuccess={() => setPinVerified(true)}
+      />
     </section>
   );
 }

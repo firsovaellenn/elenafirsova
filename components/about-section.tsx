@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Award, Briefcase, Ruler, Quote, Camera } from "lucide-react";
 import { aboutData } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { PinDialog } from "@/components/pin-dialog";
 
 function ParamBadge({ label, value }: { label: string; value: string }) {
   return (
@@ -27,9 +28,15 @@ export function AboutSection() {
       return aboutData.photo;
     }
   });
+  const [pinVerified, setPinVerified] = useState(false);
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handlePhotoClick() {
+    if (!pinVerified) {
+      setPinDialogOpen(true);
+      return;
+    }
     fileInputRef.current?.click();
   }
 
@@ -72,19 +79,21 @@ export function AboutSection() {
             <div className="relative">
               <button
                 onClick={handlePhotoClick}
-                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-2xl w-full text-left cursor-pointer group"
-                aria-label="Изменить фото"
+                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-2xl w-full text-left group"
+                aria-label={pinVerified ? "Изменить фото" : "Фото"}
               >
                 <img
                   src={photoSrc}
                   alt={aboutData.photoAlt}
                   className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 p-3 rounded-full bg-white/20 backdrop-blur-sm">
-                    <Camera className="h-6 w-6 text-white" />
+                {pinVerified && (
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 p-3 rounded-full bg-white/20 backdrop-blur-sm">
+                      <Camera className="h-6 w-6 text-white" />
+                    </div>
                   </div>
-                </div>
+                )}
               </button>
               <input
                 ref={fileInputRef}
@@ -192,6 +201,12 @@ export function AboutSection() {
           </div>
         </div>
       </div>
+
+      <PinDialog
+        open={pinDialogOpen}
+        onOpenChange={setPinDialogOpen}
+        onSuccess={() => setPinVerified(true)}
+      />
     </section>
   );
 }
