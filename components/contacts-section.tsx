@@ -35,7 +35,6 @@ export function ContactsSection() {
   const [errors, setErrors] = useState<
     Partial<Record<keyof ContactFormData, string>>
   >({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (field: keyof ContactFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -48,7 +47,7 @@ export function ContactsSection() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const result = contactFormSchema.safeParse(form);
@@ -63,11 +62,13 @@ export function ContactsSection() {
     }
 
     setErrors({});
-    setIsSubmitting(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const subject = encodeURIComponent(`Новый проект от ${form.name}`);
+    const body = encodeURIComponent(
+      `Имя: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
+    );
+    window.location.href = `mailto:${contactsData.businessEmail}?subject=${subject}&body=${body}`;
 
-    setIsSubmitting(false);
     setForm({ name: "", email: "", message: "" });
     toast.success("Сообщение отправлено! Я свяжусь с вами в ближайшее время.");
   };
@@ -168,9 +169,8 @@ export function ContactsSection() {
                   type="submit"
                   size="lg"
                   className="w-full rounded-xl h-13 font-bold uppercase tracking-wider"
-                  disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Отправка..." : "Отправить сообщение"}
+                  Отправить сообщение
                 </Button>
               </form>
             </div>
