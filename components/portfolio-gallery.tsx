@@ -131,7 +131,7 @@ function SortablePhoto({
       <button
         onClick={onSelect}
         className={cn(
-          "relative overflow-hidden rounded-3xl bg-muted text-left w-full",
+          "relative overflow-hidden rounded-lg bg-muted text-left w-full",
           "shadow-sm hover:shadow-xl transition-all duration-500"
         )}
       >
@@ -145,8 +145,8 @@ function SortablePhoto({
             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:opacity-90"
           />
           {photo.title && (
-            <div className="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <p className="text-white text-sm font-medium leading-tight">
+            <div className="absolute inset-x-0 bottom-0 p-2 pt-8 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-white text-xs font-medium leading-tight">
                 {photo.title}
               </p>
             </div>
@@ -442,7 +442,7 @@ export function PortfolioGallery() {
               items={photos.map((p) => p.id)}
               strategy={rectSortingStrategy}
             >
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
                 {photos.map((photo) => (
                   <ScrollReveal key={photo.id} delay={0}>
                     <SortablePhoto
