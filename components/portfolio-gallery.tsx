@@ -46,7 +46,17 @@ interface GalleryPhoto {
   width: number;
   height: number;
   title?: string;
+  category?: "fashion" | "beauty" | "commercial";
 }
+
+const CATEGORIES = [
+  { value: "all", label: "Все" },
+  { value: "fashion", label: "Fashion" },
+  { value: "beauty", label: "Beauty" },
+  { value: "commercial", label: "Commercial" },
+] as const;
+
+type CategoryValue = (typeof CATEGORIES)[number]["value"];
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const VALID_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -197,10 +207,15 @@ export function PortfolioGallery() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [photoTitle, setPhotoTitle] = useState("");
+  const [uploadCategory, setUploadCategory] =
+    useState<GalleryPhoto["category"]>(undefined);
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const [textEditorOpen, setTextEditorOpen] = useState(false);
   const [editingPhotoId, setEditingPhotoId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const [editingCategory, setEditingCategory] =
+    useState<GalleryPhoto["category"]>(undefined);
+  const [activeFilter, setActiveFilter] = useState<CategoryValue>("all");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { isManagement, onPinSuccess } = useManagement();
 
@@ -280,6 +295,7 @@ export function PortfolioGallery() {
             width: dims.width,
             height: dims.height,
             title: title || undefined,
+            category: uploadCategory,
           };
         })
       );
@@ -292,6 +308,7 @@ export function PortfolioGallery() {
 
       setUploadOpen(false);
       setPhotoTitle("");
+      setUploadCategory(undefined);
       toast.success(`Загружено ${validFiles.length} фото`, {
         id: toastId,
       });
@@ -321,21 +338,34 @@ export function PortfolioGallery() {
   function handleEditTitleStart(photo: GalleryPhoto) {
     setEditingPhotoId(photo.id);
     setEditingTitle(photo.title || "");
+    setEditingCategory(photo.category);
   }
 
   function handleEditTitleSave() {
     if (!editingPhotoId) return;
     setPhotos((prev) => {
       const updated = prev.map((p) =>
-        p.id === editingPhotoId ? { ...p, title: editingTitle || undefined } : p
+        p.id === editingPhotoId
+          ? {
+              ...p,
+              title: editingTitle || undefined,
+              category: editingCategory,
+            }
+          : p
       );
       savePhotos(updated);
       return updated;
     });
     setEditingPhotoId(null);
     setEditingTitle("");
+    setEditingCategory(undefined);
     toast.success("Название сохранено");
   }
+
+  const filteredPhotos =
+    activeFilter === "all"
+      ? photos
+      : photos.filter((p) => p.category === activeFilter);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -433,30 +463,50 @@ export function PortfolioGallery() {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : photos.length > 0 ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={photos.map((p) => p.id)}
-              strategy={rectSortingStrategy}
-            >
-              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-                {photos.map((photo) => (
-                  <ScrollReveal key={photo.id} delay={0}>
-                    <SortablePhoto
-                      photo={photo}
-                      pinVerified={isManagement}
-                      onSelect={() => setSelectedPhoto(photo)}
-                      onDelete={() => handleDelete(photo)}
-                      onEditTitle={() => handleEditTitleStart(photo)}
-                    />
-                  </ScrollReveal>
+          <>
+            <ScrollReveal delay={100}>
+              <div className="flex justify-center gap-2 mb-10 flex-wrap">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setActiveFilter(cat.value)}
+                    className={cn(
+                      "px-5 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                      activeFilter === cat.value
+                        ? "bg-primary text-primary-foreground shadow-md"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    {cat.label}
+                  </button>
                 ))}
               </div>
-            </SortableContext>
-          </DndContext>
+            </ScrollReveal>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={filteredPhotos.map((p) => p.id)}
+                strategy={rectSortingStrategy}
+              >
+                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+                  {filteredPhotos.map((photo) => (
+                    <ScrollReveal key={photo.id} delay={0}>
+                      <SortablePhoto
+                        photo={photo}
+                        pinVerified={isManagement}
+                        onSelect={() => setSelectedPhoto(photo)}
+                        onDelete={() => handleDelete(photo)}
+                        onEditTitle={() => handleEditTitleStart(photo)}
+                      />
+                    </ScrollReveal>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          </>
         ) : (
           <div className="text-center py-20">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted mb-6">
@@ -587,6 +637,40 @@ export function PortfolioGallery() {
                   disabled={uploading}
                 />
               </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Категория
+                </label>
+                <div className="flex gap-1.5 flex-wrap">
+                  <button
+                    onClick={() => setUploadCategory(undefined)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                      !uploadCategory
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    Без категории
+                  </button>
+                  {CATEGORIES.filter((c) => c.value !== "all").map((cat) => (
+                    <button
+                      key={cat.value}
+                      onClick={() =>
+                        setUploadCategory(cat.value as GalleryPhoto["category"])
+                      }
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                        uploadCategory === cat.value
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <label className="flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 cursor-pointer hover:border-primary/50 transition-colors">
                 {uploading ? (
                   <Loader2 className="h-10 w-10 animate-spin text-muted-foreground mb-3" />
@@ -649,7 +733,7 @@ export function PortfolioGallery() {
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black tracking-tight">
-                Название фото
+                Редактировать фото
               </h3>
               <button
                 onClick={() => setEditingPhotoId(null)}
@@ -670,6 +754,43 @@ export function PortfolioGallery() {
                 }}
                 autoFocus
               />
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Категория
+                </label>
+                <div className="flex gap-1.5 flex-wrap">
+                  <button
+                    onClick={() => setEditingCategory(undefined)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                      !editingCategory
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    Без категории
+                  </button>
+                  {CATEGORIES.filter((c) => c.value !== "all").map((cat) => (
+                    <button
+                      key={cat.value}
+                      onClick={() =>
+                        setEditingCategory(
+                          cat.value as GalleryPhoto["category"]
+                        )
+                      }
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                        editingCategory === cat.value
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      )}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="flex gap-2">
                 <Button
