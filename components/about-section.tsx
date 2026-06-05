@@ -1,4 +1,7 @@
-import { Award, Briefcase, Ruler, Quote } from "lucide-react";
+"use client";
+
+import { useState, useRef } from "react";
+import { Award, Briefcase, Ruler, Quote, Camera } from "lucide-react";
 import { aboutData } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
@@ -13,7 +16,41 @@ function ParamBadge({ label, value }: { label: string; value: string }) {
   );
 }
 
+const STORAGE_KEY = "about-photo";
+
 export function AboutSection() {
+  const [photoSrc, setPhotoSrc] = useState(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored || aboutData.photo;
+    } catch {
+      return aboutData.photo;
+    }
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handlePhotoClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setPhotoSrc(dataUrl);
+      try {
+        localStorage.setItem(STORAGE_KEY, dataUrl);
+      } catch {
+        /* localStorage unavailable */
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
   return (
     <section id="about" className="py-28 px-4 relative overflow-hidden">
       <div className="absolute inset-0 pattern-dots opacity-[0.03]" />
@@ -33,13 +70,29 @@ export function AboutSection() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20 items-start">
           <ScrollReveal className="lg:col-span-2" delay={100}>
             <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-2xl">
+              <button
+                onClick={handlePhotoClick}
+                className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted shadow-2xl w-full text-left cursor-pointer group"
+                aria-label="Изменить фото"
+              >
                 <img
-                  src={aboutData.photo}
+                  src={photoSrc}
                   alt={aboutData.photoAlt}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
-              </div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 p-3 rounded-full bg-white/20 backdrop-blur-sm">
+                    <Camera className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handlePhotoChange}
+                className="hidden"
+              />
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary rounded-2xl -z-10" />
               <div className="absolute -top-4 -left-4 w-16 h-16 border-2 border-primary rounded-2xl -z-10" />
             </div>

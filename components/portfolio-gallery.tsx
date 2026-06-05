@@ -55,6 +55,18 @@ function generateId(): string {
   return `photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function getImageDimensions(
+  src: string
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () =>
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 const STORAGE_KEY = "gallery-photos";
 
 function loadPhotos(): GalleryPhoto[] {
@@ -154,8 +166,23 @@ export function PortfolioGallery() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setPhotos(loadPhotos());
-    setLoaded(true);
+    const stored = loadPhotos();
+    (async () => {
+      const migrated = await Promise.all(
+        stored.map(async (photo) => {
+          if (photo.width !== 800 || photo.height !== 1000) return photo;
+          try {
+            const dims = await getImageDimensions(photo.src);
+            return { ...photo, ...dims };
+          } catch {
+            return photo;
+          }
+        })
+      );
+      setPhotos(migrated);
+      savePhotos(migrated);
+      setLoaded(true);
+    })();
   }, []);
 
   const sensors = useSensors(
@@ -199,13 +226,17 @@ export function PortfolioGallery() {
 
     try {
       const newPhotos: GalleryPhoto[] = await Promise.all(
-        validFiles.map(async (file) => ({
-          id: generateId(),
-          src: await readFileAsBase64(file),
-          alt: file.name,
-          width: 800,
-          height: 1000,
-        }))
+        validFiles.map(async (file) => {
+          const src = await readFileAsBase64(file);
+          const dims = await getImageDimensions(src);
+          return {
+            id: generateId(),
+            src,
+            alt: file.name,
+            width: dims.width,
+            height: dims.height,
+          };
+        })
       );
 
       setPhotos((prev) => {
