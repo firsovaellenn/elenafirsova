@@ -2,7 +2,6 @@
 // Используются когда USE_DATABASE=false или БД недоступна
 
 import { Service, Photo } from "./models";
-import { portfolioItems } from "./data";
 
 export const mockServices: Service[] = [
   {
@@ -34,7 +33,4 @@ export const mockServices: Service[] = [
   },
 ];
 
-export const mockPhotos: Photo[] = portfolioItems.map((item) => ({
-  ...item,
-  createdAt: new Date("2024-01-01").toISOString(),
-}));
+export const mockPhotos: Photo[] = [];

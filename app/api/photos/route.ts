@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { isDatabaseAvailable } from "@/lib/db";
 import { createPhoto, getAllPhotos, deletePhoto } from "@/lib/models";
 import { mockPhotos } from "@/lib/mock-data";
-import { portfolioItems } from "@/lib/data";
 import { z } from "zod";
 
 export const dynamic = "force-static";
@@ -10,10 +9,9 @@ export const dynamic = "force-static";
 const createPhotoSchema = z.object({
   src: z.string().min(1),
   alt: z.string().min(1),
-  category: z.enum(["fashion", "beauty", "commercial"]),
-  title: z.string().min(1),
   width: z.number().positive().default(800),
   height: z.number().positive().default(1000),
+  order: z.number().int().nonnegative().default(0),
 });
 
 export async function GET() {
@@ -25,8 +23,7 @@ export async function GET() {
 
   try {
     const uploaded = await getAllPhotos();
-    const allPhotos = [...portfolioItems, ...uploaded];
-    return NextResponse.json({ photos: allPhotos });
+    return NextResponse.json({ photos: uploaded });
   } catch {
     return NextResponse.json({ photos: mockPhotos });
   }

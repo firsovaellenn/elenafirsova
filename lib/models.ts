@@ -23,10 +23,9 @@ export interface Photo {
   id: string;
   src: string;
   alt: string;
-  category: "fashion" | "beauty" | "commercial";
-  title: string;
   width: number;
   height: number;
+  order: number;
   createdAt: string;
 }
 
