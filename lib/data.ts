@@ -368,8 +368,12 @@ export const contactsData: ContactsData = {
   businessEmail: "mail@elena-firsova.ru",
   phone: "+7 (926) 55-77-965",
   socialLinks: [
-    { label: "Instagram", href: "https://instagram.com/", icon: "instagram" },
-    { label: "Telegram", href: "https://t.me/", icon: "telegram" },
-    { label: "VK", href: "https://vk.com/", icon: "vk" },
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/___ellenn___",
+      icon: "instagram",
+    },
+    { label: "Telegram", href: "https://t.me/elenaf18", icon: "telegram" },
+    { label: "VK", href: "https://m.vk.com/elenafirsova18", icon: "vk" },
   ],
 };
