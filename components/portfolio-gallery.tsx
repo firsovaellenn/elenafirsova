@@ -32,11 +32,36 @@ function readFileAsBase64(file: File): Promise<string> {
   });
 }
 
+const STORAGE_KEY = "uploaded-photos";
+const PHOTO_PREFIX = "upload-";
+
+function loadUploadedPhotos(): PhotoItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as PhotoItem[];
+  } catch {
+    return [];
+  }
+}
+
+function saveUploadedPhotos(photos: PhotoItem[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+  } catch (e) {
+    console.error("Failed to save photos to localStorage", e);
+  }
+}
+
 export function PortfolioGallery() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
   const [selectedItem, setSelectedItem] = useState<PhotoItem | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-  const [allItems, setAllItems] = useState<PhotoItem[]>(portfolioItems);
+  const [allItems, setAllItems] = useState<PhotoItem[]>(() => [
+    ...portfolioItems,
+    ...loadUploadedPhotos(),
+  ]);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -44,31 +69,10 @@ export function PortfolioGallery() {
     useState<UploadCategory>("fashion");
   const [uploadTitle, setUploadTitle] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [fetching, setFetching] = useState(true);
-  const [loadedUploaded, setLoadedUploaded] = useState<Set<string>>(new Set());
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    async function fetchPhotos() {
-      try {
-        const res = await fetch("/api/photos");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.photos) {
-            const uploadedIds = new Set(
-              (data.photos as PhotoItem[])
-                .filter((p: PhotoItem) => p.id.startsWith("upload-"))
-                .map((p: PhotoItem) => p.id)
-            );
-            setLoadedUploaded(uploadedIds);
-            setAllItems(data.photos);
-          }
-        }
-      } catch {
-      } finally {
-        setFetching(false);
-      }
-    }
-    fetchPhotos();
+    setLoaded(true);
   }, []);
 
   const filtered =
@@ -150,40 +154,25 @@ export function PortfolioGallery() {
     try {
       const base64 = await readFileAsBase64(selectedFile);
 
-      const res = await fetch("/api/photos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          src: base64,
-          alt: uploadTitle.trim(),
-          category: uploadCategory,
-          title: uploadTitle.trim(),
-          width: 800,
-          height: 1000,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Ошибка загрузки");
-      }
-
-      const data = await res.json();
       const newItem: PhotoItem = {
-        ...data.photo,
+        id: `${PHOTO_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        src: base64,
+        alt: uploadTitle.trim(),
+        category: uploadCategory,
+        title: uploadTitle.trim(),
+        width: 800,
+        height: 1000,
         isUploaded: true,
       };
 
-      setAllItems((prev) => [newItem, ...prev]);
-      setLoadedUploaded((prev) => new Set(prev).add(newItem.id));
+      const updated = [newItem, ...allItems];
+      setAllItems(updated);
+      saveUploadedPhotos(updated.filter((i) => i.id.startsWith(PHOTO_PREFIX)));
       setUploadOpen(false);
       resetUploadForm();
       toast.success("Фото загружено", { id: toastId });
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Не удалось загрузить фото",
-        { id: toastId }
-      );
+    } catch {
+      toast.error("Не удалось загрузить фото", { id: toastId });
     } finally {
       setUploading(false);
     }
@@ -195,15 +184,9 @@ export function PortfolioGallery() {
     const toastId = toast.loading("Удаляем...");
 
     try {
-      const res = await fetch(`/api/photos?id=${item.id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Ошибка удаления");
-      }
-
-      setAllItems((prev) => prev.filter((p) => p.id !== item.id));
+      const updated = allItems.filter((p) => p.id !== item.id);
+      setAllItems(updated);
+      saveUploadedPhotos(updated.filter((i) => i.id.startsWith(PHOTO_PREFIX)));
       if (selectedItem?.id === item.id) {
         setSelectedItem(null);
       }
@@ -221,7 +204,7 @@ export function PortfolioGallery() {
   }
 
   function isUploaded(item: PhotoItem) {
-    return item.id.startsWith("upload-") || loadedUploaded.has(item.id);
+    return item.id.startsWith(PHOTO_PREFIX);
   }
 
   return (
@@ -272,7 +255,7 @@ export function PortfolioGallery() {
           </div>
         </ScrollReveal>
 
-        {fetching ? (
+        {!loaded ? (
           <div className="flex justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
@@ -344,7 +327,7 @@ export function PortfolioGallery() {
           </div>
         )}
 
-        {!fetching && filtered.length === 0 && (
+        {loaded && filtered.length === 0 && (
           <div className="text-center py-20">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-muted mb-6">
               <Camera className="h-8 w-8 text-muted-foreground" />
