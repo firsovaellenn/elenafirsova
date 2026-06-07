@@ -1,21 +1,10 @@
 import type { NextConfig } from "next";
 
-const basePath =
-  process.env.BASE_PATH !== undefined ? process.env.BASE_PATH : "";
-
 const nextConfig: NextConfig = {
-  output: process.env.OUTPUT_MODE === "export" ? "export" : undefined,
+  images: {
+    unoptimized: true,
+  },
 
-  ...(basePath && {
-    basePath,
-    assetPrefix: basePath,
-  }),
-
-  ...(process.env.OUTPUT_MODE === "export" && {
-    images: {
-      unoptimized: true,
-    },
-  }),
   allowedDevOrigins: ["*"],
 
   poweredByHeader: false,
