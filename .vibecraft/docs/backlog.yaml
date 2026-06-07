@@ -788,3 +788,21 @@ tasks:
     related_feature: Портфолио / Галерея
     status: pending
     summary: null
+  - id: task-035
+    phase: mvp
+    title: Добавить редактирование текста в шапке сайта
+    description: "Добавить в редактор текста (режим управления) возможность изменять
+      текст в шапке сайта: заголовок «Елена Фирсова», подзаголовок «Professional
+      Model», теги «Fashion · Beauty · Commercial» и описание. Сохранять в
+      localStorage."
+    priority: high
+    acceptance_criteria:
+      - В режиме управления в редакторе текста есть поля для редактирования
+        шапки сайта (заголовок, подзаголовок, описание)
+      - Изменения текста в шапке сохраняются и отображаются после обновления
+        страницы
+    depends_on:
+      - task-033
+    related_feature: Портфолио / Галерея
+    status: pending
+    summary: null
