@@ -21,7 +21,6 @@ export function TextEditorDialog({
 
   useEffect(() => {
     if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setText(loadSiteText());
     } else {
       setText(null);
@@ -64,6 +63,56 @@ export function TextEditorDialog({
         </div>
 
         <div className="space-y-8 max-h-[70vh] overflow-y-auto pr-2">
+          {/* Шапка сайта */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold uppercase tracking-wider">Шапка сайта</h4>
+            <div className="bg-muted/30 rounded-xl p-4 space-y-3">
+              <input
+                value={text.hero.subtitle}
+                onChange={(e) =>
+                  update("hero", { ...text.hero, subtitle: e.target.value })
+                }
+                placeholder="Подзаголовок (напр. Professional Model)"
+                className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              />
+              <div className="flex gap-2">
+                <input
+                  value={text.hero.name}
+                  onChange={(e) =>
+                    update("hero", { ...text.hero, name: e.target.value })
+                  }
+                  placeholder="Имя"
+                  className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+                <input
+                  value={text.hero.surname}
+                  onChange={(e) =>
+                    update("hero", { ...text.hero, surname: e.target.value })
+                  }
+                  placeholder="Фамилия"
+                  className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+              </div>
+              <input
+                value={text.hero.tags}
+                onChange={(e) =>
+                  update("hero", { ...text.hero, tags: e.target.value })
+                }
+                placeholder="Теги (напр. Fashion · Beauty · Commercial)"
+                className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              />
+              <textarea
+                value={text.hero.description}
+                onChange={(e) =>
+                  update("hero", { ...text.hero, description: e.target.value })
+                }
+                rows={3}
+                placeholder="Описание под шапкой"
+                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y"
+              />
+            </div>
+          </div>
+
           <div className="space-y-3">
             <h4 className="text-sm font-bold uppercase tracking-wider">Био</h4>
             <textarea
@@ -76,9 +125,7 @@ export function TextEditorDialog({
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold uppercase tracking-wider">
-                Опыт работы
-              </h4>
+              <h4 className="text-sm font-bold uppercase tracking-wider">Опыт работы</h4>
               <button
                 onClick={() =>
                   update("experience", [
@@ -93,10 +140,7 @@ export function TextEditorDialog({
               </button>
             </div>
             {text.experience.map((exp, i) => (
-              <div
-                key={i}
-                className="flex gap-3 items-start bg-muted/30 rounded-xl p-4"
-              >
+              <div key={i} className="flex gap-3 items-start bg-muted/30 rounded-xl p-4">
                 <div className="flex-1 space-y-2">
                   <input
                     value={exp.period}
@@ -105,7 +149,7 @@ export function TextEditorDialog({
                       next[i] = { ...next[i], period: e.target.value };
                       update("experience", next);
                     }}
-                    placeholder="Период (напр. 2024 — н.в.)"
+                    placeholder="Период"
                     className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   />
                   <input
@@ -134,9 +178,7 @@ export function TextEditorDialog({
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold uppercase tracking-wider">
-                Достижения
-              </h4>
+              <h4 className="text-sm font-bold uppercase tracking-wider">Достижения</h4>
               <button
                 onClick={() =>
                   update("achievements", [...text.achievements, ""])
@@ -161,9 +203,7 @@ export function TextEditorDialog({
                 />
                 <button
                   onClick={() => {
-                    const next = text.achievements.filter(
-                      (_, idx) => idx !== i
-                    );
+                    const next = text.achievements.filter((_, idx) => idx !== i);
                     update("achievements", next);
                   }}
                   className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors shrink-0"
@@ -175,14 +215,9 @@ export function TextEditorDialog({
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider">
-              Услуги и цены
-            </h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider">Услуги и цены</h4>
             {text.services.map((service, i) => (
-              <div
-                key={service.id}
-                className="space-y-2 bg-muted/30 rounded-xl p-4"
-              >
+              <div key={service.id} className="space-y-2 bg-muted/30 rounded-xl p-4">
                 <input
                   value={service.title}
                   onChange={(e) => {
@@ -211,76 +246,20 @@ export function TextEditorDialog({
                     next[i] = { ...next[i], priceFrom: e.target.value };
                     update("services", next);
                   }}
-                  placeholder="Цена (напр. от 5 000 ₽/час)"
+                  placeholder="Цена"
                   className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
-                <div className="space-y-1.5">
-                  <p className="text-xs text-muted-foreground">Форматы</p>
-                  {service.formats.map((format, fi) => (
-                    <div key={fi} className="flex gap-2 items-center">
-                      <input
-                        value={format}
-                        onChange={(e) => {
-                          const next = [...text.services];
-                          next[i] = {
-                            ...next[i],
-                            formats: next[i].formats.map((f, idx) =>
-                              idx === fi ? e.target.value : f
-                            ),
-                          };
-                          update("services", next);
-                        }}
-                        placeholder="Формат работы"
-                        className="flex h-8 w-full rounded-lg border border-input bg-background px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      />
-                      <button
-                        onClick={() => {
-                          const next = [...text.services];
-                          next[i] = {
-                            ...next[i],
-                            formats: next[i].formats.filter(
-                              (_, idx) => idx !== fi
-                            ),
-                          };
-                          update("services", next);
-                        }}
-                        className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors shrink-0"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => {
-                      const next = [...text.services];
-                      next[i] = {
-                        ...next[i],
-                        formats: [...next[i].formats, ""],
-                      };
-                      update("services", next);
-                    }}
-                    className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <Plus className="h-3 w-3" />
-                    Добавить формат
-                  </button>
-                </div>
               </div>
             ))}
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-bold uppercase tracking-wider">
-              Контакты
-            </h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider">Контакты</h4>
             <div className="space-y-2 bg-muted/30 rounded-xl p-4">
               <input
                 value={text.contacts.email}
                 onChange={(e) =>
-                  update("contacts", {
-                    ...text.contacts,
-                    email: e.target.value,
-                  })
+                  update("contacts", { ...text.contacts, email: e.target.value })
                 }
                 placeholder="Email"
                 className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -288,10 +267,7 @@ export function TextEditorDialog({
               <input
                 value={text.contacts.businessEmail}
                 onChange={(e) =>
-                  update("contacts", {
-                    ...text.contacts,
-                    businessEmail: e.target.value,
-                  })
+                  update("contacts", { ...text.contacts, businessEmail: e.target.value })
                 }
                 placeholder="Business Email"
                 className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -299,10 +275,7 @@ export function TextEditorDialog({
               <input
                 value={text.contacts.phone}
                 onChange={(e) =>
-                  update("contacts", {
-                    ...text.contacts,
-                    phone: e.target.value,
-                  })
+                  update("contacts", { ...text.contacts, phone: e.target.value })
                 }
                 placeholder="Телефон"
                 className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
