@@ -1,10 +1,29 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { PortfolioGallery } from "@/components/portfolio-gallery";
 import { AboutSection } from "@/components/about-section";
 import { ServicesSection } from "@/components/services-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { ContactsSection } from "@/components/contacts-section";
+import { loadSiteText } from "@/lib/site-text";
 
 export default function HomePage() {
+  const [hero, setHero] = useState({
+    subtitle: "Professional Model",
+    name: "Елена",
+    surname: "Фирсова",
+    tags: "Fashion · Beauty · Commercial",
+    description: "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, брендами и агентствами.",
+  });
+
+  useEffect(() => {
+    const text = loadSiteText();
+    if (text?.hero) {
+      setHero(text.hero);
+    }
+  }, []);
+
   return (
     <>
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -15,19 +34,18 @@ export default function HomePage() {
           <div className="max-w-4xl mx-auto">
             <div className="space-y-6">
               <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
-                Professional Model
+                {hero.subtitle}
               </p>
               <h1 className="text-7xl sm:text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] text-balance">
-                Елена
-                <span className="block text-primary">Фирсова</span>
+                {hero.name}
+                <span className="block text-primary">{hero.surname}</span>
               </h1>
               <div className="h-1.5 w-24 bg-gradient-gold rounded-full" />
               <p className="text-xl sm:text-2xl text-muted-foreground max-w-xl font-light tracking-wide">
-                Fashion · Beauty · Commercial
+                {hero.tags}
               </p>
               <p className="text-base text-muted-foreground/70 max-w-md leading-relaxed">
-                Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за
-                годы сотрудничества с фотографами, брендами и агентствами.
+                {hero.description}
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                 <a
