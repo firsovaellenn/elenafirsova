@@ -3,6 +3,13 @@
 import { aboutData, servicesData, contactsData } from "@/lib/data";
 
 export interface SiteText {
+  hero: {
+    subtitle: string;
+    name: string;
+    surname: string;
+    tags: string;
+    description: string;
+  };
   bio: string;
   experience: { period: string; description: string }[];
   achievements: string[];
@@ -46,6 +53,13 @@ export function saveSiteText(text: SiteText) {
 
 function getDefaults(): SiteText {
   return {
+    hero: {
+      subtitle: "Professional Model",
+      name: "Елена",
+      surname: "Фирсова",
+      tags: "Fashion · Beauty · Commercial",
+      description: "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, известными брендами и агентствами.",
+    },
     bio: aboutData.bio,
     experience: aboutData.experience,
     achievements: aboutData.achievements,
