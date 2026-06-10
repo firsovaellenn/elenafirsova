@@ -4,6 +4,8 @@ import { createPhoto, getAllPhotos, deletePhoto } from "@/lib/models";
 import { mockPhotos } from "@/lib/mock-data";
 import { z } from "zod";
 
+export const dynamic = "force-static";
+
 const createPhotoSchema = z.object({
   src: z.string().min(1),
   alt: z.string().min(1),
