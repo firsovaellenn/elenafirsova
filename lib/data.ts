@@ -24,7 +24,7 @@ export interface AboutData {
 }
 
 export const aboutData: AboutData = {
-  photo: "/model-photo.jpg",
+  photo: "/elenafirsova/model-photo.jpg",
   photoAlt: "Елена Фирсова — профессиональная модель",
   name: "Елена Фирсова",
   title: "Professional Model",
