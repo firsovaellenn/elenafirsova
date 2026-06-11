@@ -21,14 +21,7 @@ function ParamBadge({ label, value }: { label: string; value: string }) {
 const STORAGE_KEY = "about-photo";
 
 export function AboutSection() {
-  const [photoSrc, setPhotoSrc] = useState(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored || aboutData.photo;
-    } catch {
-      return aboutData.photo;
-    }
-  });
+  const [photoSrc, setPhotoSrc] = useState(aboutData.photo);
   const [siteText] = useState<ReturnType<typeof loadSiteText> | null>(() => {
     if (typeof window === "undefined") return null;
     return loadSiteText();
