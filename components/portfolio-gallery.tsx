@@ -8,7 +8,7 @@ import { TextEditorDialog } from "@/components/text-editor-dialog";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useManagement } from "@/components/management-context";
 import { Button } from "@/components/ui/button";
-import { repoPhotos, RepoPhoto } from "@/lib/portfolio-photos";
+import { repoPhotos } from "@/lib/portfolio-photos";
 
 export function PortfolioGallery() {
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
