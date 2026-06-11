@@ -24,7 +24,7 @@ export interface AboutData {
 }
 
 export const aboutData: AboutData = {
-  photo: "https://picsum.photos/seed/elena-profile/600/750",
+  photo: "/model-photo.jpg",
   photoAlt: "Елена Фирсова — профессиональная модель",
   name: "Елена Фирсова",
   title: "Professional Model",
