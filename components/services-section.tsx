@@ -78,12 +78,11 @@ export function ServicesSection() {
           <div className="text-center space-y-4 mb-20">
             <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
               Services & Pricing
-            </p>
-           <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
-  Профессиональные форматы сотрудничества для брендов, фотографов и агентств
+            <h2 ...>
+  Профессиональные форматы сотрудничества
 </h2>
-<p className="text-muted-foreground max-w-lg mx-auto text-lg">
-  Услуги и прайс
+<p ...>
+  Услуги и прайс для брендов, фотографов и агентств
 </p>
             <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
