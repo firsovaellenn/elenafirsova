@@ -119,9 +119,6 @@ export function AboutSection() {
                   {aboutData.title}
                 </p>
                 <div className="h-1 w-12 bg-gradient-gold rounded-full" />
-                <p className="text-muted-foreground leading-relaxed text-lg">
-                  {bio}
-                </p>
               </div>
             </ScrollReveal>
 
