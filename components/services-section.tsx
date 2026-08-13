@@ -79,13 +79,12 @@ export function ServicesSection() {
             <p className="text-xs uppercase tracking-[0.35em] text-primary font-semibold">
               Services & Pricing
             </p>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
-              Услуги и прайс
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-lg">
-              Профессиональные форматы сотрудничества для брендов, фотографов и
-              агентств
-            </p>
+           <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+  Профессиональные форматы сотрудничества для брендов, фотографов и агентств
+</h2>
+<p className="text-muted-foreground max-w-lg mx-auto text-lg">
+  Услуги и прайс
+</p>
             <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
         </ScrollReveal>
