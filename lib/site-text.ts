@@ -3,6 +3,7 @@
 import { aboutData, servicesData, contactsData } from "@/lib/data";
 
 export interface SiteText {
+  headerTitle: string;
   hero: {
     subtitle: string;
     name: string;
@@ -53,12 +54,14 @@ export function saveSiteText(text: SiteText) {
 
 function getDefaults(): SiteText {
   return {
+    headerTitle: "Елена Фирсова",
     hero: {
       subtitle: "Professional Model",
       name: "Елена",
       surname: "Фирсова",
       tags: "Fashion · Beauty · Commercial",
-      description: "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, известными брендами и агентствами.",
+      description:
+        "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, известными брендами и агентствами.",
     },
     bio: aboutData.bio,
     experience: aboutData.experience,
