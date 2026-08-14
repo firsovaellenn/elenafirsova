@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Lock, ExternalLink, Upload, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Lock, ExternalLink, Upload, X, ChevronLeft, ChevronRight, GripVertical } from "lucide-react";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { PinDialog } from "@/components/pin-dialog";
 import { TextEditorDialog } from "@/components/text-editor-dialog";
@@ -10,11 +10,26 @@ import { useManagement } from "@/components/management-context";
 import { Button } from "@/components/ui/button";
 import { repoPhotos } from "@/lib/portfolio-photos";
 
+const ORDER_KEY = "portfolio-photo-order";
+
 export function PortfolioGallery() {
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const [textEditorOpen, setTextEditorOpen] = useState(false);
   const { isManagement, onPinSuccess } = useManagement();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [photos, setPhotos] = useState(() => {
+    try {
+      const order = localStorage.getItem(ORDER_KEY);
+      if (order) {
+        const ids = JSON.parse(order) as string[];
+        const byId = new Map(repoPhotos.map((p) => [p.id, p]));
+        const sorted = ids.map((id) => byId.get(id)).filter(Boolean) as typeof repoPhotos;
+        if (sorted.length === repoPhotos.length) return sorted;
+      }
+    } catch {}
+    return repoPhotos;
+  });
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   function handlePinSuccess() {
     onPinSuccess();
@@ -24,8 +39,6 @@ export function PortfolioGallery() {
   function handleTextEditorSave() {
     window.location.reload();
   }
-
-  const allPhotos = repoPhotos;
 
   function openLightbox(index: number) {
     setLightboxIndex(index);
@@ -37,14 +50,26 @@ export function PortfolioGallery() {
 
   function prevPhoto() {
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex - 1 + allPhotos.length) % allPhotos.length);
+      setLightboxIndex((lightboxIndex - 1 + photos.length) % photos.length);
     }
   }
 
   function nextPhoto() {
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex + 1) % allPhotos.length);
+      setLightboxIndex((lightboxIndex + 1) % photos.length);
     }
+  }
+
+  function handleDrop(targetIndex: number) {
+    if (dragIndex === null || dragIndex === targetIndex) return;
+    const next = [...photos];
+    const [moved] = next.splice(dragIndex, 1);
+    next.splice(targetIndex, 0, moved);
+    setPhotos(next);
+    try {
+      localStorage.setItem(ORDER_KEY, JSON.stringify(next.map((p) => p.id)));
+    } catch {}
+    setDragIndex(null);
   }
 
   return (
@@ -99,23 +124,36 @@ export function PortfolioGallery() {
           </div>
         </ScrollReveal>
 
-        {allPhotos.length > 0 ? (
+        {photos.length > 0 ? (
           <ScrollReveal delay={200}>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {allPhotos.map((photo, index) => (
-                <button
+              {photos.map((photo, index) => (
+                <div
                   key={photo.id}
-                  onClick={() => openLightbox(index)}
-                  className="group relative aspect-[3/4] overflow-hidden rounded-lg bg-muted"
+                  draggable={isManagement}
+                  onDragStart={() => setDragIndex(index)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => handleDrop(index)}
+                  className={`group relative aspect-[3/4] overflow-hidden rounded-lg bg-muted ${isManagement ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === index ? "opacity-50" : ""}`}
                 >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-                </button>
+                  <button
+                    onClick={() => openLightbox(index)}
+                    className="block h-full w-full"
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+                  </button>
+                  {isManagement && (
+                    <div className="absolute top-2 left-2 p-1.5 rounded-full bg-black/50 text-white">
+                      <GripVertical className="h-4 w-4" />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </ScrollReveal>
@@ -139,8 +177,7 @@ export function PortfolioGallery() {
         )}
       </div>
 
-      {/* Лайтбокс */}
-      {lightboxIndex !== null && allPhotos[lightboxIndex] && (
+      {lightboxIndex !== null && photos[lightboxIndex] && (
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
           onClick={closeLightbox}
@@ -152,7 +189,7 @@ export function PortfolioGallery() {
             <X className="h-8 w-8" />
           </button>
 
-          {allPhotos.length > 1 && (
+          {photos.length > 1 && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); prevPhoto(); }}
@@ -170,8 +207,8 @@ export function PortfolioGallery() {
           )}
 
           <img
-            src={allPhotos[lightboxIndex].src}
-            alt={allPhotos[lightboxIndex].alt}
+            src={photos[lightboxIndex].src}
+            alt={photos[lightboxIndex].alt}
             className="max-h-[90vh] max-w-[90vw] object-contain"
             onClick={(e) => e.stopPropagation()}
           />
