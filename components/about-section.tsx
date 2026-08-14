@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Award, Briefcase, Ruler, Quote, Camera } from "lucide-react";
 import { aboutData } from "@/lib/data";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -22,10 +22,10 @@ const STORAGE_KEY = "about-photo";
 
 export function AboutSection() {
   const [photoSrc, setPhotoSrc] = useState(aboutData.photo);
-  const [siteText] = useState<ReturnType<typeof loadSiteText> | null>(() => {
-    if (typeof window === "undefined") return null;
-    return loadSiteText();
-  });
+  const [siteText, setSiteText] = useState<ReturnType<typeof loadSiteText> | null>(null);
+useEffect(() => {
+  setSiteText(loadSiteText());
+}, []);
   const [pinVerified, setPinVerified] = useState(false);
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
