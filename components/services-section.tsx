@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera, Presentation, Triangle, Building2 } from "lucide-react";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { loadSiteText } from "@/lib/site-text";
@@ -63,10 +63,13 @@ function ServiceCard({
 }
 
 export function ServicesSection() {
-  const [services] = useState<SiteText["services"]>(() => {
-    if (typeof window === "undefined") return [];
-    return loadSiteText().services;
-  });
+const [services, setServices] = useState<SiteText["services"]>(() => {
+  if (typeof window === "undefined") return [];
+  return [];
+});
+useEffect(() => {
+  setServices(loadSiteText().services);
+}, []);
 
   if (services.length === 0) return null;
 
