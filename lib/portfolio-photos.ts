@@ -5,7 +5,6 @@ export interface RepoPhoto {
 }
 
 export const repoPhotos: RepoPhoto[] = [
-  { id: "p-01", src: "/elenafirsova/photos/2018-01-05%2015.24.37.HEIC", alt: "Фото 1" },
   { id: "p-02", src: "/elenafirsova/photos/2018-02-15%2018.18.55.jpg", alt: "Фото 2" },
   { id: "p-03", src: "/elenafirsova/photos/2018-02-15%2018.19.05.jpg", alt: "Фото 3" },
   { id: "p-04", src: "/elenafirsova/photos/2018-02-15%2018.19.38.jpg", alt: "Фото 4" },
