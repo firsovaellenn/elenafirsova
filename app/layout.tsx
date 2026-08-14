@@ -4,6 +4,8 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
+import { HeaderBrand } from "@/components/header-brand";
+import { HeaderManagementButton } from "@/components/header-management-button";
 import { BridgeProvider } from "@/components/bridge-provider";
 import { ManagementProvider } from "@/components/management-context";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -32,16 +34,8 @@ export default function RootLayout({
           <ThemeProvider>
             <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-md">
               <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-xl font-bold tracking-tight"
-                >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  {appName}
-                </Link>
-                <nav className="hidden sm:flex items-center gap-8">
+                <HeaderBrand />
+                <nav className="flex items-center gap-8">
                   {[
                     { href: "#about", label: "О себе" },
                     { href: "#services", label: "Услуги" },
@@ -52,11 +46,12 @@ export default function RootLayout({
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors font-medium"
+                      className="hidden sm:inline text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors font-medium"
                     >
                       {item.label}
                     </Link>
                   ))}
+                  <HeaderManagementButton />
                 </nav>
               </div>
             </header>
