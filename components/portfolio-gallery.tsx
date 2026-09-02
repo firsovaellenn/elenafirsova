@@ -47,8 +47,8 @@ export function PortfolioGallery() {
               Portfolio
             </p>
             <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.9]">
-              Мои работы
-            </h2>
+  Портфолио
+</h2>
             <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
         </ScrollReveal>
