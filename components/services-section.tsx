@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Camera, Presentation, Triangle, Building2 } from "lucide-react";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { loadSiteText } from "@/lib/site-text";
@@ -31,45 +31,19 @@ function ServiceCard({
         <h3 className="text-2xl font-black tracking-tight mb-3">
           {service.title}
         </h3>
-        <p className="text-muted-foreground leading-relaxed mb-8">
+        <p className="text-muted-foreground leading-relaxed">
           {service.description}
         </p>
-
-        <div className="space-y-3 mb-8 flex-1">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold">
-            Форматы работы
-          </p>
-          <ul className="space-y-2.5">
-            {service.formats.map((format) => (
-              <li key={format} className="flex items-start gap-3 text-sm">
-                <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0" />
-                <span className="text-muted-foreground">{format}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="pt-6 border-t border-border/30">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-            Стоимость
-          </p>
-          <p className="text-2xl font-black tracking-tight text-primary">
-            {service.priceFrom}
-          </p>
-        </div>
       </div>
     </ScrollReveal>
   );
 }
 
 export function ServicesSection() {
-const [services, setServices] = useState<SiteText["services"]>(() => {
-  if (typeof window === "undefined") return [];
-  return [];
-});
-useEffect(() => {
-  setServices(loadSiteText().services);
-}, []);
+  const [services] = useState<SiteText["services"]>(() => {
+    if (typeof window === "undefined") return [];
+    return loadSiteText().services;
+  });
 
   if (services.length === 0) return null;
 
