@@ -31,9 +31,23 @@ function ServiceCard({
         <h3 className="text-2xl font-black tracking-tight mb-3">
           {service.title}
         </h3>
-        <p className="text-muted-foreground leading-relaxed">
+        <p className="text-muted-foreground leading-relaxed mb-8">
           {service.description}
         </p>
+
+        <div className="space-y-3 flex-1">
+          <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold">
+            Форматы работы
+          </p>
+          <ul className="space-y-2.5">
+            {service.formats.map((format) => (
+              <li key={format} className="flex items-start gap-3 text-sm">
+                <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0" />
+                <span className="text-muted-foreground">{format}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </ScrollReveal>
   );
