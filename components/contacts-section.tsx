@@ -92,8 +92,8 @@ export function ContactsSection() {
               Контакты и связь
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto text-lg">
-              Готова к новым проектам и сотрудничеству
-            </p>
+  Для сотрудничества
+</p>
             <div className="mx-auto h-1 w-16 bg-gradient-gold rounded-full" />
           </div>
         </ScrollReveal>
