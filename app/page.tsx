@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PortfolioGallery } from "@/components/portfolio-gallery";
 import { AboutSection } from "@/components/about-section";
 import { ServicesSection } from "@/components/services-section";
@@ -9,20 +9,19 @@ import { ContactsSection } from "@/components/contacts-section";
 import { loadSiteText } from "@/lib/site-text";
 
 export default function HomePage() {
-  const [hero, setHero] = useState({
-    subtitle: "Professional Model",
-    name: "Елена",
-    surname: "Фирсова",
-    tags: "Fashion · Beauty · Commercial",
-    description: "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, брендами и агентствами.",
-  });
-
-  useEffect(() => {
+  const [hero] = useState(() => {
     const text = loadSiteText();
-    if (text?.hero) {
-      setHero(text.hero);
-    }
-  }, []);
+    return (
+      text?.hero ?? {
+        subtitle: "Professional Model",
+        name: "Елена",
+        surname: "Фирсова",
+        tags: "Fashion · Beauty · Commercial",
+        description:
+          "Добро пожаловать в моё портфолио. Здесь собраны лучшие работы за годы сотрудничества с фотографами, брендами и агентствами.",
+      }
+    );
+  });
 
   return (
     <>
@@ -72,8 +71,8 @@ export default function HomePage() {
       </section>
       <AboutSection />
       <ServicesSection />
-      <PortfolioGallery />
       <TestimonialsSection />
+      <PortfolioGallery />
       <ContactsSection />
     </>
   );
